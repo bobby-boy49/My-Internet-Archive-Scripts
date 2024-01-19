@@ -5,4 +5,4 @@ wombo=$2
 dombo=$3
 x="$(echo "$wombo" | sed " s/%/%25/g; s/ /%20/g; s/</%3C/g; s/>/%3E/g; s/@/%40/g; s/#/%23/g; s/(/%28/g; s/)/%29/g; s/=/%3D/g; s/+/%2B/g; s/'/%27/g; s/,/%2C/g; s/\^/%5E/g; s/\&/%26/g; s/\[/%5B/g; s/\]/%5D/g; s/{/%7B/g; s/}/%7D/g; s/|/%7C/g; s/;/%3B/g; s/:/%3A/g; s/?/%3F/g; s/\`/%60/g; s/!/%21/g; s/‘/%E2%80%98/g; s/’/%E2%80%99/g; s/“/%E2%80%9C/g; s/”/%E2%80%9D/g; s/‚/%E2%80%9A/g; s/„/%E2%80%9E/g" | sed 's/"/%22/g')"
 
-$combo $(curl -s https://archive.org/download/$x/ | grep "href=" | grep "$dombo" | awk -v w="https://archive.org/download/$x/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d; /title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d' | awk -F '"' '{print $1}')
+$combo $(curl -s https://archive.org/download/$x/ | grep "href=" | grep ".$dombo" | awk -v w="https://archive.org/download/$x/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d; /title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d' | awk -F '"' '{print $1}')
