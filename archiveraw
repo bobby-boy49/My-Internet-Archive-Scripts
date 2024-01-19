@@ -3,4 +3,4 @@
 wombo=$1
 dombo=$2
 
-curl -s https://archive.org/download/$wombo/ | grep "href=" | grep "$dombo" | awk -v w="https://archive.org/download/$wombo/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d' | awk -F '"' '{print $1}' | sed 's/ //g'
+curl -s https://archive.org/download/$wombo/ | grep "href=" | grep ".$dombo" | awk -v w="https://archive.org/download/$wombo/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d' | awk -F '"' '{print $1}' | sed 's/ //g'
