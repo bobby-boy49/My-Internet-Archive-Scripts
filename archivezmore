@@ -3,4 +3,4 @@
 wombo=$1
 dombo=$2
 
-archivezcat $wombo $dombo > archivezmore-temp.txt && more archivezmore-temp.txt && rm archivezmore-temp.txt
+archivezcat "$wombo" $dombo > archivezmore-temp.txt && more archivezmore-temp.txt && rm archivezmore-temp.txt
