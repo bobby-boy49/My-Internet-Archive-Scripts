@@ -1,0 +1,6 @@
+#!/bin/sh
+
+dombo=$1
+combo=$2
+
+darchiveraw $dombo $combo > darchiveurl.txt && aria2c -i darchiveurl.txt && rm darchiveurl.txt
