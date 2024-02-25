@@ -1,0 +1,6 @@
+#!/bin/sh
+
+wombo=$1
+combo=$2
+
+$wombo https://archive.org/compress/$combo
