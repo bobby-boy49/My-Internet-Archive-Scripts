@@ -16,4 +16,6 @@ mv My-Internet-Archive-Scripts/* $(pwd)/
 
 rm -rf My-Internet-Archive-Scripts
 
+echo '#!/bin/sh' > linux-install.sh && echo 'curl -s https://raw.githubusercontent.com/bobby-boy49/My-Internet-Archive-Scripts/main/linux-install.sh | sh' >> linux-install.sh
+
 cowsay "Done!"
