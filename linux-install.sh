@@ -12,6 +12,8 @@ chmod +x *
 
 cd ..
 
+rm -f archiveus*
+
 mv My-Internet-Archive-Scripts/* $(pwd)/
 
 rm -rf My-Internet-Archive-Scripts
