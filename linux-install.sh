@@ -6,7 +6,7 @@ git clone https://github.com/bobby-boy49/My-Internet-Archive-Scripts.git
 
 cd My-Internet-Archive-Scripts
 
-rm -f README.md termux-install.sh linux-install.sh
+rm -f README.md termux-install.sh linux-install.sh archiveus archiveusa
 
 chmod +x *
 
