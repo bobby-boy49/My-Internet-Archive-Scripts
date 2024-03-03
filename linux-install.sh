@@ -12,7 +12,7 @@ chmod +x *
 
 cd ..
 
-if [ -f $(pwd)/archiveus ]
+if [ -f $(pwd)/archiveus* ]
 then
 	rm -f archiveus* && echo "archiveus and archiveusa are no longer working because of javascript. :/ *SCRIPTS REMOVED!*"
 else
