@@ -2,7 +2,7 @@
 
 # This will install the scripts in the directory this file is in!
 
-log=$(echo '$?' | >> archiveupdate.txt)
+log=$(echo '$?' 2>&1 | >> archiveupdate.txt)
 
 git clone https://github.com/bobby-boy49/My-Internet-Archive-Scripts.git
 $log
