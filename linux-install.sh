@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # This will install the scripts in the directory this file is in!
 
