@@ -2,9 +2,6 @@
 
 # This will install the scripts in the directory this file is in!
 
-archiveus=$(rm -f archiveus*)
-womboecho=$(echo 'archiveus and archiveusa are no longer working because of javascript. :/ *SCRIPTS REMOVED!*')
-
 git clone https://github.com/bobby-boy49/My-Internet-Archive-Scripts.git
 
 cd My-Internet-Archive-Scripts
@@ -15,12 +12,11 @@ chmod +x *
 
 cd ..
 
-if [ -f $(pwd)/archiveus ]
+rm -f archiveus*
+
+if [ $? -eq 0 ]
 then
-	$archiveus && $womboecho
-elif [ -f $(pwd)/archiveusa ]
-then
-	$archiveus && $womboecho
+	echo "archiveus and archiveusa are no longer working because of javascript. :/ *SCRIPTS REMOVED!*"
 else
 	echo "archiveus and archiveusa does not exist ignoring..."
 fi
