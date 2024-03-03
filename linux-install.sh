@@ -17,7 +17,7 @@ then
  	rm -f archiveus*
   	echo "archiveus and archiveusa scripts no longer work anymore due to javascript. :/ *REMOVED SCRIPTS*"
   else
-  echo "archiveus and archiveusa does not exist ignoring..."
+   echo "archiveus and archiveusa does not exist ignoring..."
 fi
 
 mv My-Internet-Archive-Scripts/* $(pwd)/
