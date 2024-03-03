@@ -12,15 +12,11 @@ chmod +x *
 
 cd ..
 
-rm -f archiveus && rm archiveusa
-
-if [ $? -eq 0 ]
-then
-	echo "archiveus and archiveusa are no longer working because of javascript. :/ *SCRIPTS REMOVED!*"
+if [ -f $(pwd)/archiveus ]; then
+rm -f archiveus*
 else
-	echo "archiveus and archiveusa does not exist ignoring..."
+	echo "archiveus script is not available ignoring..."
 fi
-
 mv My-Internet-Archive-Scripts/* $(pwd)/
 
 rm -rf My-Internet-Archive-Scripts
