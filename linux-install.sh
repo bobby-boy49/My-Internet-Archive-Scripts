@@ -12,7 +12,7 @@ chmod +x *
 
 cd ..
 
-rm -f archiveus*
+rm -f archiveus && rm archiveusa
 
 if [ $? -eq 0 ]
 then
