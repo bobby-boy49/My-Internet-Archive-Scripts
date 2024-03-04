@@ -11,4 +11,4 @@ else
 	echo "archiveus and archiveusa does not exist ignoring..."
 fi
 
-cowsay Done!
+cowsay "Done!"
