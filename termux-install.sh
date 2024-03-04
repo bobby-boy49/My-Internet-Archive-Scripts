@@ -1,9 +1,11 @@
 #!/bin/sh
 
-if find -type f /data/data/com.termux/files/usr/bin | grep -q 'archiveus' || find -type f /data/data/com.termux/files/usr/bin | grep -q 'archiveusa'; then
-	rm -f /data/data/com.termux/files/usr/bin/archiveus*
+if cd /data/data/com.termux/files/usr/bin && find -type f | grep -q 'archiveus' || cd /data/data/com.termux/files/usr/bin && find -type f | grep -q 'archiveusa'; then
+	rm -f archiveus*
+	cd
 	echo "archiveus and archiveusa scripts no longer work anymore due to javascript. :/ *REMOVED SCRIPTS*"
 else
+	cd
 	echo "archiveus and archiveusa does not exist ignoring..."
 fi
 
