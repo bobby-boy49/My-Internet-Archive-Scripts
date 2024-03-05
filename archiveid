@@ -11,5 +11,5 @@ comdo="$(echo $bombo | sed "s/％/%25/g; s/ /%20/g; s/</%3C/g; s/>/%3E/g; s/@/%4
 if [ $(echo "$bombo" | tr -dc '/' | wc -c) = 1 ]; then
 	$dombo $comdo
 else
-	echo "This is a Directory! can not read $bombo at this time."
+	echo "This is a Directory! Can not read $bombo at this time."
 fi
