@@ -23,6 +23,6 @@ else
 	echo "This is a Directory!" 1>&2
 	wombo="$wombo$bombo"
 	dir="$(bombo_fun)"
-	cvr="$(echo $bombo$dir | x_fun | sed 's#//#/#' | x_fun2)"
+	cvr="$(echo $bombo$dir | x_fun | sed 's#//#/#g' | x_fun2)"
 	$dombo $cvr
 fi
