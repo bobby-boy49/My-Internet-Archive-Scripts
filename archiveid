@@ -30,6 +30,5 @@ else
 	wombo="$wombo2$(cat $temp | sed "s/'/\\\'/g" | sed 's/"/\\"/g' | xargs -d'\n' | sed "s/\/ \//\//g; s#$bombo##")"
 	# echo; echo "RECUR OUT: $wombo"; echo
 done
-rm $temp
-$dombo $(echo "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
+rm $temp; $dombo $(echo "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
 fi
