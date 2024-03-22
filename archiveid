@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
 
-syntax='syntax [-d|-w|-r|-c|-l|-s|-S]'
+syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S]'
 
 help() {
 echo "$syntax"
 echo
+echo "-h: Help"
 echo "-d: The tool you want to use."
 echo "-w: The identifier to use."
 echo "-r: Reverse layout."
