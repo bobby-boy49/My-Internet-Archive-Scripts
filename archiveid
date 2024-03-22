@@ -15,8 +15,10 @@ echo "-S: Search identifiers."
 echo
 }
 
+please="Please use the '-h' option."
+
 if [[ $# -eq 0 ]]; then
-  help; exit
+  echo; echo $please; echo; exit
 fi
 
 search() {
@@ -36,7 +38,7 @@ case "$sombo" in
   S) wombo="$(search)";;
   *) echo; echo "Umm... Yeah... I think thats... Not.. Right. :^/"
     echo
-    echo "Please use the '-h' option."; echo; exit;;
+    echo $please; echo; exit;;
 esac
 done
 
