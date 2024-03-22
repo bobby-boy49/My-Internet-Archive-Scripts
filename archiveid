@@ -1,8 +1,41 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-dombo=$1
-wombo=$2
-combo=$3
+syntax='syntax [-d|-w|-r|-c|-l|-s|-S]'
+
+help() {
+echo "$syntax"
+echo
+echo "-d: The tool you want to use."
+echo "-w: The identifier to use."
+echo "-r: Reverse layout."
+echo "-c: Filter the search results."
+echo "-l: Reverse-list layout."
+echo "-s: Only syntax."
+echo "-S: Search identifiers."
+echo
+}
+
+search() {
+  read -p 'Search: ' -r search_var; read -p 'Page: ' -r search_page_var; read -p 'Rows: ' -r search_rows_var
+  curl -s 'https://archive.org/advancedsearch.php?q='$(echo "$search_var" | sed 's/ /+/')'&fl[]=identifier&rows='$search_rows_var'&page='$search_page_var'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | fzf $r$l
+}
+
+while getopts "hd:w:rc:lsS" sombo; do
+case "$sombo" in
+  h) help; exit;;
+  d) dombo="$OPTARG";;
+  w) wombo="$OPTARG";;
+  r) r='--layout=reverse';;
+  c) combo="$OPTARG";;
+  l) l='--layout=reverse-list';;
+  s) echo "$syntax"; echo; exit;;
+  S) wombo="$(search)";;
+  *) echo; echo "Umm... Yeah... I think thats... Not.. Right. :^/"
+    echo
+    echo "Please use the '-h' option."; echo; exit;;
+esac
+done
+
 x_fun() {
 	sed "s/％/%25/g; s/ /%20/g; s/</%3C/g; s/>/%3E/g; s/@/%40/g; s/#/%23/g; s/(/%28/g; s/)/%29/g; s/=/%3D/g; s/+/%2B/g; s/'/%27/g; s/,/%2C/g; s/\^/%5E/g; s/\&/%26/g; s/\[/%5B/g; s/\]/%5D/g; s/{/%7B/g; s/}/%7D/g; s/|/%7C/g; s/;/%3B/g; s/:/%3A/g; s/?/%3F/g; s/\`/%60/g; s/!/%21/g; s/‘/%E2%80%98/g; s/’/%E2%80%99/g; s/“/%E2%80%9C/g; s/”/%E2%80%9D/g; s/‚/%E2%80%9A/g; s/„/%E2%80%9E/g"
 }
@@ -11,7 +44,7 @@ x_fun2() {
 }
 x="$(echo "$wombo" | x_fun | sed 's/"/%22/g')"
 bombo_fun() {
-	archivels "$wombo" $combo | fzf
+  archivels "$wombo" $combo | fzf $r$l
 }
 bombo="$(bombo_fun)"
 comdo="$(echo $bombo | x_fun | x_fun2)"
@@ -28,7 +61,7 @@ else
 	while [[ $(cat $temp | sed "s/'/\\\'/g" | sed 's/"/\\"/g' | xargs | sed 's/\/ /\//g' | awk -F "" '{print $NF}') = / ]]; do
 	echo "$(bombo_fun)" >> $temp
 	wombo="$wombo2$(cat $temp | sed "s/'/\\\'/g" | sed 's/"/\\"/g' | xargs -d'\n' | sed "s/\/ \//\//g; s#$bombo##")"
-	# echo; echo "RECUR OUT: $wombo"; echo
+	echo; echo "RECUR OUT: $wombo"; echo
 done
 rm $temp; $dombo $(echo "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
 fi
