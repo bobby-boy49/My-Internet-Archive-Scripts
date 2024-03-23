@@ -1,18 +1,28 @@
 #!/usr/bin/env sh
 
-syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S]'
+syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S|-a|-D|-R|-v]'
 
 help() {
 echo "$syntax"
 echo
 echo "-h: Help"
+echo 
+echo "---- Can run in whatever order. ----"
+echo
 echo "-d: The tool you want to use."
 echo "-w: The identifier to use."
-echo "-r: Reverse layout."
+echo "-r: Reverse layout for fzf."
 echo "-c: Filter the search results."
-echo "-l: Reverse-list layout."
+echo "-l: Reverse-list layout for fzf."
 echo "-s: Only syntax."
+echo
+echo "---- Must run in order! ----"
+echo
 echo "-S: Search identifiers."
+echo "-a: Bulk grab files."
+echo "-D: Bulk grab files with pre-loaded links."
+echo "-R: Raw output"
+echo "-v: Grab reviews."
 echo
 }
 
@@ -22,7 +32,32 @@ if [ $# -eq 0 ]; then
   echo; echo $please; echo; exit
 fi
 
-while getopts "hd:w:rc:lsS" sombo; do
+archive_sed='/title="Parent Directory"/d; /_thumb.jpg/d'
+
+search() {
+  read -p 'Search: ' -r search_var; read -p 'Page: ' -r search_page_var; read -p 'Rows: ' -r search_rows_var
+  curl -s 'https://archive.org/advancedsearch.php?q='$(echo "$search_var" | sed 's/ /+/')'&fl[]=identifier&rows='$search_rows_var'&page='$search_page_var'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | fzf $r$l
+}
+archive_fun() {
+  $dombo $(curl -s https://archive.org/download/$(echo "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(echo "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed "/\/details\//d; $archive_sed; /.ia.mp4/d" | awk -F '"' '{print $1}')
+}
+darchive_fun() {
+echo "This May Take A Minute..." 1>&2 && $dombo $(curl -vs $(archive_raw | sed "$archive_sed; /.ia.mp4/d") 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r')
+}
+archive_raw() {
+ curl -s https://archive.org/download/$(echo "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(echo "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d' | awk -F '"' '{print $1}' | sed 's/ //g'
+}
+archive_rvs() {
+  echo 1>&2 && echo 'Loading Reviews' 1>&2 && curl -s $(curl -vs $(archive_fun) 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r') 2> /dev/null | sed 's/<?xml version="1.0" encoding="UTF-8"?>//; /<reviews itemIdentifier=/d; /<review>/d; s/<\/review>//g; s/<reviewtitle>/Title: /g; s/<\/reviewtitle>//g; s/<reviewer>/User: /g; s/<\/reviewer>//g; s/<reviewbody>/Review: /g; s/<\/reviewbody>//g; s/<stars>/Stars: /g; s/<\/stars>//g; s/<reviewdate>/Review date: /g; s/<\/reviewdate>//g; s/<createdate>/Creation date: /g; s/<\/createdate>//g; s/<reviewer_itemname>/User ID: /g; s/<\/reviewer_itemname>//g; s/<info>/info/g; s/<num_reviews>/Number of Reviews: /g; s/<\/num_reviews>//g; s/<avg_rating>/Avg Number of Reviews: /g; s/<\/avg_rating>//g; s/<\/info>//g; s/<\/reviews>//g' > archivervs-temp.txt && more archivervs-temp.txt && rm archivervs-temp.txt && echo
+}
+x_fun() {
+	sed "s/％/%25/g; s/ /%20/g; s/</%3C/g; s/>/%3E/g; s/@/%40/g; s/#/%23/g; s/(/%28/g; s/)/%29/g; s/=/%3D/g; s/+/%2B/g; s/'/%27/g; s/,/%2C/g; s/\^/%5E/g; s/\&/%26/g; s/\[/%5B/g; s/\]/%5D/g; s/{/%7B/g; s/}/%7D/g; s/|/%7C/g; s/;/%3B/g; s/:/%3A/g; s/?/%3F/g; s/\`/%60/g; s/!/%21/g; s/‘/%E2%80%98/g; s/’/%E2%80%99/g; s/“/%E2%80%9C/g; s/”/%E2%80%9D/g; s/‚/%E2%80%9A/g; s/„/%E2%80%9E/g" | sed 's/"/%22/g'
+}
+x_fun2() {
+	sed "s#/#https://archive.org/download/$x/#"
+}
+
+while getopts "hd:w:rc:lsSaDRv" sombo; do
 case "$sombo" in
   h) help; exit;;
   d) dombo="$OPTARG";;
@@ -32,26 +67,23 @@ case "$sombo" in
   l) l='--layout=reverse-list';;
   s) echo "$syntax"; echo; exit;;
   S) wombo="$(search)";;
+  a) archive_fun; exit;;
+  D) darchive_fun; exit;;
+  R) archive_raw; exit;;
+  v) dombo="echo"; combo="_reviews.xml"; archive_rvs; exit
+    ;;
   *) echo; echo "Umm... Yeah... I think thats... Not.. Right. :^/"
     echo
     echo $please; echo; exit;;
 esac
 done
 
-search() {
-  read -p 'Search: ' -r search_var; read -p 'Page: ' -r search_page_var; read -p 'Rows: ' -r search_rows_var
-  curl -s 'https://archive.org/advancedsearch.php?q='$(echo "$search_var" | sed 's/ /+/')'&fl[]=identifier&rows='$search_rows_var'&page='$search_page_var'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | fzf $r$l
-}
-x_fun() {
-	sed "s/％/%25/g; s/ /%20/g; s/</%3C/g; s/>/%3E/g; s/@/%40/g; s/#/%23/g; s/(/%28/g; s/)/%29/g; s/=/%3D/g; s/+/%2B/g; s/'/%27/g; s/,/%2C/g; s/\^/%5E/g; s/\&/%26/g; s/\[/%5B/g; s/\]/%5D/g; s/{/%7B/g; s/}/%7D/g; s/|/%7C/g; s/;/%3B/g; s/:/%3A/g; s/?/%3F/g; s/\`/%60/g; s/!/%21/g; s/‘/%E2%80%98/g; s/’/%E2%80%99/g; s/“/%E2%80%9C/g; s/”/%E2%80%9D/g; s/‚/%E2%80%9A/g; s/„/%E2%80%9E/g" | sed 's/"/%22/g'
-}
-x_fun2() {
-	sed "s#/#https://archive.org/download/$x/#"
-}
-x="$(echo "$wombo" | x_fun | sed 's/"/%22/g')"
+x="$(echo "$wombo" | x_fun)"
+
 bombo_fun() {
   archivels "$wombo" $combo | fzf $r$l
 }
+
 bombo="$(bombo_fun)"
 comdo="$(echo $bombo | x_fun | x_fun2)"
 
