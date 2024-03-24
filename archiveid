@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S|-a|-D|-R|-v|-L]'
+syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S|-a|-D|-R|-k|-v|-L|-i]'
 
 help() {
 echo "$syntax"
@@ -22,8 +22,10 @@ echo "-S: Search identifiers."
 echo "-a: Bulk grab files."
 echo "-D: Bulk grab files with pre-loaded links."
 echo "-R: Raw output."
+echo "-k: Raw output with pre-loaded links."
 echo "-v: Grab reviews."
 echo "-L: List output."
+echo "-i: aria2 mode."
 echo
 }
 
@@ -54,6 +56,12 @@ archive_rvs() {
 archive_ls() {
   curl -s https://archive.org/download/$(echo "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(echo "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d; /title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d' | awk -F '"' '{print $1}' | sed "s/ //g; s/https:\/\/archive.org\/download\///g; s#$(echo "$wombo" | x_fun)##; s/%20/ /g; s/%3C/</g; s/%3E/>/g; s/%40/@/g; s/%23/#/g; s/%28/(/g; s/%29/)/g; s/%3D/=/g; s/%2B/+/g; s/%27/'/g; s/%2C/,/g; s/%5E/\^/g; s/%26/\&/g; s/%5B/\[/g; s/%5D/\]/g; s/%7B/{/g; s/%7D/}/g; s/%7C/|/g; s/%3B/;/g; s/%3A/:/g; s/%3F/?/g; s/%60/\`/g; s/%21/!/g; s/%E2%80%98/‘/g; s/%E2%80%99/’/g; s/%E2%80%9C/“/g; s/%E2%80%9D/”/g; s/%E2%80%9A/‚/g; s/%E2%80%9E/„/g; s/%25/％/g" | sed 's/%22/"/g'
 }
+darchive_raw() {
+  echo "This May Take A Minute..." 1>&2 && curl -vs $(archive_raw | sed '/title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d') 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r'
+}
+aria2darchive_fun() {
+  darchive_raw | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -i darchiveurl.txt && rm darchiveurl.txt
+}
 x_fun() {
 	sed "s/％/%25/g; s/ /%20/g; s/</%3C/g; s/>/%3E/g; s/@/%40/g; s/#/%23/g; s/(/%28/g; s/)/%29/g; s/=/%3D/g; s/+/%2B/g; s/'/%27/g; s/,/%2C/g; s/\^/%5E/g; s/\&/%26/g; s/\[/%5B/g; s/\]/%5D/g; s/{/%7B/g; s/}/%7D/g; s/|/%7C/g; s/;/%3B/g; s/:/%3A/g; s/?/%3F/g; s/\`/%60/g; s/!/%21/g; s/‘/%E2%80%98/g; s/’/%E2%80%99/g; s/“/%E2%80%9C/g; s/”/%E2%80%9D/g; s/‚/%E2%80%9A/g; s/„/%E2%80%9E/g" | sed 's/"/%22/g'
 }
@@ -61,7 +69,7 @@ x_fun2() {
 	sed "s#/#https://archive.org/download/$x/#"
 }
 
-while getopts "hd:w:rc:lsSaDRvL" sombo; do
+while getopts "hd:w:rc:lsSaDRkvLi" sombo; do
 case "$sombo" in
   h) help; exit;;
   d) dombo="$OPTARG";;
@@ -74,8 +82,10 @@ case "$sombo" in
   a) archive_fun; exit;;
   D) darchive_fun; exit;;
   R) archive_raw; exit;;
+  k) darchive_raw; exit;;
   v) dombo="echo"; combo="_reviews.xml"; archive_rvs; exit;;
   L) archive_ls; exit;;
+  i) aria2darchive_fun; exit;;
   *) echo; echo "Umm... Yeah... I think thats... Not.. Right. :^/"
     echo
     echo $please; echo; exit;;
