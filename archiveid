@@ -25,7 +25,7 @@ echo "-R: Raw output."
 echo "-k: Raw output with pre-loaded links."
 echo "-v: Grab reviews."
 echo "-L: List output."
-echo "-i: aria2 mode for the '-a' and the '-D' options."
+echo "-i: aria2 mode for the '-a' and '-D' options."
 echo
 }
 
