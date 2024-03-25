@@ -38,7 +38,6 @@ fi
 archive_sed='/title="Parent Directory"/d; /_thumb.jpg/d'
 
 search() {
- read -p 'Search: ' -r search_var; read -p 'Page: ' -r search_page_var; read -p 'Rows: ' -r search_rows_var
   curl -s 'https://archive.org/advancedsearch.php?q='$(echo "$search_var" | sed 's/ /+/')'&fl[]=identifier&rows='$search_rows_var'&page='$search_page_var'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | fzf $r$l
 }
 archive_fun() {
@@ -78,7 +77,7 @@ case "$sombo" in
   c) combo="$OPTARG";;
   l) l='--layout=reverse-list';;
   s) echo "$syntax"; echo; exit;;
-  S) wombo="$(search)";;
+  S) clear; read -p 'Search: ' -r search_var; clear; read -p 'Page: ' -r search_page_var; read -p 'Rows: ' -r search_rows_var; clear; wombo="$(search)";;
   a) archive_fun; exit;;
   D) darchive_fun; exit;;
   R) archive_raw; exit;;
