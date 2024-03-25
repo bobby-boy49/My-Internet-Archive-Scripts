@@ -77,7 +77,7 @@ case "$sombo" in
   c) combo="$OPTARG";;
   l) l='--layout=reverse-list';;
   s) echo "$syntax"; echo; exit;;
-  S) clear; read -p 'Search: ' -r search_var; clear; read -p 'Page: ' -r search_page_var; clear; read -p 'Rows: ' -r search_rows_var; clear; wombo="$(search)";;
+  S) clear; read -p 'Search: ' -r search_var; clear; read -p 'Page: ' -r search_page_var; clear; read -p 'Rows: ' -r search_rows_var; clear; echo; wombo="$(search)";;
   a) archive_fun; exit;;
   D) darchive_fun; exit;;
   R) archive_raw; exit;;
