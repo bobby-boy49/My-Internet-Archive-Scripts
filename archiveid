@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S|-a|-D|-R|-k|-v|-L|-i]'
+syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S|-a|-D|-R|-k|-C|-v|-L|-i]'
 
 help() {
 echo "$syntax"
@@ -23,10 +23,10 @@ echo "-a: Bulk grab files."
 echo "-D: Bulk grab files with pre-loaded links."
 echo "-R: Raw output."
 echo "-k: Raw output with pre-loaded links."
+echo "-C: Download a '.zip' of the archive. *may not work for larger archives.*"
 echo "-v: Grab reviews."
 echo "-L: List output."
 echo "-i: aria2 mode."
-echo "-C: Download a '.zip' of the archive. *may not work for larger archives.*"
 echo
 }
 
@@ -72,7 +72,7 @@ x_fun2() {
 	sed "s#/#https://archive.org/download/$x/#"
 }
 
-while getopts "hd:w:rc:lsSaDRkvLiC" sombo; do
+while getopts "hd:w:rc:lsSaDRkCvLi" sombo; do
 case "$sombo" in
   h) help; exit;;
   d) dombo="$OPTARG";;
@@ -86,10 +86,10 @@ case "$sombo" in
   D) darchive_fun; exit;;
   R) archive_raw; exit;;
   k) darchive_raw; exit;;
+  C) archive_cpd; exit;;
   v) dombo="echo"; combo="_reviews.xml"; archive_rvs; exit;;
   L) archive_ls; exit;;
   i) aria2darchive_fun; exit;;
-  C) archive_cpd; exit;;
   *) echo; echo "Umm... Yeah... I think thats... Not.. Right. :^/"
     echo
     echo $please; echo; exit;;
