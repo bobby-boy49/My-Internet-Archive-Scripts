@@ -38,7 +38,7 @@ fi
 archive_sed='/title="Parent Directory"/d; /_thumb.jpg/d'
 
 search() {
- clear; read -p 'Search: ' -r search_var; clear; read -p 'Page: ' -r search_page_var; clear; read -p 'Rows: ' -r search_rows_var; clear
+ read -p 'Search: ' -r search_var; read -p 'Page: ' -r search_page_var; read -p 'Rows: ' -r search_rows_var
   curl -s 'https://archive.org/advancedsearch.php?q='$(echo "$search_var" | sed 's/ /+/')'&fl[]=identifier&rows='$search_rows_var'&page='$search_page_var'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | fzf $r$l
 }
 archive_fun() {
