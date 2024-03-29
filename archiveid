@@ -116,7 +116,7 @@ else
 	wombo2="$wombo"
 	while [ $(cat $temp | sed "s/'/\\\'/g" | sed 's/"/\\"/g' | xargs | sed 's/\/ /\//g' | awk -F "" '{print $NF}') = / ]; do
 	echo "$(bombo_fun)" >> $temp
-	wombo="$wombo2$(cat $temp | sed "s/'/\\\'/g" | sed 's/"/\\"/g' | xargs -d'\n' | sed "s/\/ \//\//g; s#$bombo##")"
+	wombo="$wombo2$(cat $temp | sed "s/'/\\\'/g" | sed 's/"/\\"/g' | xargs -d'\n' | sed "s/\/ \//\//g; s/\/\//\//g; s#$bombo##")"
 	echo; echo "RECUR OUT: $wombo"; echo
 done
 rm $temp; $dombo $(echo "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
