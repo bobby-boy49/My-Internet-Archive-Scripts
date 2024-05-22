@@ -82,6 +82,8 @@ do_you_boo() {
     n|N) echo "Ok then.";;
       *) echo "Umm.. ok I'll just pick no...";;
   esac
+  clear
+  echo "Done! :-p"
 fi
 }
 
