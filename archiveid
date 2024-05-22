@@ -71,6 +71,19 @@ x_fun() {
 x_fun2() {
 	sed "s#/#https://archive.org/download/$x/#"
 }
+do_you_boo() {
+  if echo "$comdo" | grep ".zip"; then
+  clear
+  echo "Do you want to extract it and remove zip? (y/n) *This will delete other zip files that may be in the directory*"
+  echo
+  read -r gombo
+  case "$gombo" in
+    y|Y) unzip '*.zip' && rm *.zip;;
+    n|N) echo "Ok then.";;
+      *) echo "Umm.. ok I'll just pick no...";;
+  esac
+fi
+}
 
 while getopts "hd:w:rc:lsSaDRkCvLi" sombo; do
 case "$sombo" in
@@ -107,7 +120,7 @@ comdo="$(echo $bombo | x_fun | x_fun2)"
 
 
 if [ $(echo "$bombo" | tr -dc '/' | wc -c) = 1 ]; then
-	$dombo $comdo
+  $dombo $comdo
 else
 	echo "This is a Directory!" 1>&2
 	temp="archiveid-temp.txt"
@@ -119,5 +132,10 @@ else
 	wombo="$wombo2$(cat $temp | xargs -d'\n' | sed "s/\/ \//\//g; s#$bombo##")"
 	echo; echo "RECUR OUT: $wombo"; echo
 done
+
 rm $temp; $dombo $(echo "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
 fi
+
+comdo="$wombo"
+
+do_you_boo
