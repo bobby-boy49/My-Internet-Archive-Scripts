@@ -72,7 +72,7 @@ x_fun2() {
 	sed "s#/#https://archive.org/download/$x/#"
 }
 do_you_boo() {
-  if echo "$comdo" | grep ".zip"; then
+  if echo "$comdo" | grep '.zip'; then
   clear
   echo "Do you want to extract it and remove zip? (y/n) *This will delete other zip files that may be in the directory*"
   echo
@@ -134,8 +134,7 @@ else
 done
 
 rm $temp; $dombo $(echo "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
+comdo=$wombo
 fi
-
-comdo="$wombo"
 
 do_you_boo
