@@ -61,7 +61,10 @@ darchive_raw() {
 }
 aria2darchive_fun() {
   darchive_raw | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -i darchiveurl.txt
-  comdo="$(cat darchiveurl.txt | grep '.zip')"
+  cat darchiveurl.txt | grep '.zip' > /dev/null
+  if [ $? = 0 ]; then
+    comdo='.zip'
+  fi
   rm darchiveurl.txt
 do_you_boo
 }
@@ -75,7 +78,7 @@ x_fun2() {
 	sed "s#/#https://archive.org/download/$x/#"
 }
 do_you_boo() {
-  if echo "$comdo" | grep '.zip'; then
+  if echo "$comdo" | grep '.zip' > /dev/null; then
   clear
   echo "Do you want to extract it and remove zip? (y/n) *This will delete other zip files that may be in the directory*"
   echo
