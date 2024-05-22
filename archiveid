@@ -60,7 +60,10 @@ darchive_raw() {
   echo 1>&2 && echo "This May Take A Minute..." 1>&2 && curl -vs $(archive_raw | sed '/title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d') 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r'
 }
 aria2darchive_fun() {
-  darchive_raw | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -i darchiveurl.txt && rm darchiveurl.txt
+  darchive_raw | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -i darchiveurl.txt
+  comdo="$(cat darchiveurl.txt | grep '.zip')"
+  rm darchiveurl.txt
+do_you_boo
 }
 archive_cpd() {
 $dombo https://archive.org/compress/$(echo "$wombo" | sed 's#https://archive.org/details/##; s#https://archive.org/download/##; s#https://archive.org/compress/##')
