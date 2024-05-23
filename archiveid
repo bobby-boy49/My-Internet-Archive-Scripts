@@ -80,7 +80,7 @@ x_fun2() {
 do_you_boo() {
   if echo "$comdo" | grep '.zip' > /dev/null; then
   clear
-  echo "Do you want to extract it and remove zip? (y/n) *This will delete other zip files that may be in the directory*"
+  echo "Do you want to extract and remove zip(s)? (y/n) *This will 'EXTRACT' and or 'DELETE' other zip files that may be in the directory*"
   echo
   read -r gombo
   case "$gombo" in
