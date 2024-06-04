@@ -3,65 +3,66 @@
 syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S|-a|-D|-R|-k|-C|-v|-L|-i]'
 
 help() {
-echo "$syntax"
-echo
-echo "-h: Help"
-echo 
-echo "---- Can run in whatever order. ----"
-echo
-echo "-d: The tool you want to use."
-echo "-w: The identifier to use."
-echo "-r: Reverse layout for fzf."
-echo "-c: Filter the search results."
-echo "-l: Reverse-list layout for fzf."
-echo "-s: Only syntax."
-echo
-echo "---- Must run in order! ----"
-echo
-echo "-S: Search identifiers."
-echo "-a: Bulk grab files."
-echo "-D: Bulk grab files with pre-loaded links."
-echo "-R: Raw output."
-echo "-k: Raw output with pre-loaded links."
-echo "-C: Download a '.zip' of the archive. *May not work for larger archives.*"
-echo "-v: Grab reviews."
-echo "-L: List output."
-echo "-i: aria2 mode."
-echo
+printf "
+$syntax
+
+-h: Help
+ 
+---- Can run in whatever order. ----
+
+-d: The tool you want to use.
+-w: The identifier to use.
+-r: Reverse layout for fzf.
+-c: Filter the search results.
+-l: Reverse-list layout for fzf.
+-s: Only syntax.
+
+---- Must run in order! ----
+
+-S: Search identifiers.
+-a: Bulk grab files.
+-D: Bulk grab files with pre-loaded links.
+-R: Raw output.
+-k: Raw output with pre-loaded links.
+-C: Download a '.zip' of the archive. *May not work for larger archives.*
+-v: Grab reviews.
+-L: List output.
+-i: aria2 mode.
+\n"
 }
 
 please="Please use the '-h' option."
 
 if [ $# -eq 0 ]; then
-  echo; echo $please; echo; exit
+  printf "\n$please\n\n"; exit
 fi
 
 archive_sed='/title="Parent Directory"/d; /_thumb.jpg/d'
 
 search() {
-  curl -s 'https://archive.org/advancedsearch.php?q='$(echo "$search_var" | sed 's/ /+/')'&fl[]=identifier&rows='$search_rows_var'&page='$search_page_var'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | fzf $r$l
+  curl -s 'https://archive.org/advancedsearch.php?q='$(printf "$search_var" | sed 's/ /+/')'&fl[]=identifier&rows='$search_rows_var'&page='$search_page_var'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | sed '/@/d' | fzf $r$l
 }
 archive_fun() {
-  $dombo $(curl -s https://archive.org/download/$(echo "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(echo "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed "/\/details\//d; $archive_sed; /.ia.mp4/d" | awk -F '"' '{print $1}')
+  $dombo $(curl -s https://archive.org/download/$(printf "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(printf "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed "/\/details\//d; $archive_sed; /.ia.mp4/d" | awk -F '"' '{print $1}')
 }
 darchive_fun() {
-echo 1>&2 && echo "This May Take A Minute..." 1>&2 && $dombo $(curl -vs $(archive_raw | sed "$archive_sed; /.ia.mp4/d") 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r')
+  printf "\nThis May Take A Minute...\n" 1>&2 && $dombo $(curl -vs $(archive_raw | sed "$archive_sed; /.ia.mp4/d") 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r')
 }
 archive_raw() {
- curl -s https://archive.org/download/$(echo "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(echo "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d' | awk -F '"' '{print $1}' | sed 's/ //g'
+ curl -s https://archive.org/download/$(printf "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(printf "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d' | awk -F '"' '{print $1}' | sed 's/ //g'
 }
 archive_rvs() {
-  echo 1>&2 && echo 'Loading Reviews' 1>&2 && curl -s $(curl -vs $(archive_fun) 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r') 2> /dev/null | sed 's/<?xml version="1.0" encoding="UTF-8"?>//; /<reviews itemIdentifier=/d; /<review>/d; s/<\/review>//g; s/<reviewtitle>/Title: /g; s/<\/reviewtitle>//g; s/<reviewer>/User: /g; s/<\/reviewer>//g; s/<reviewbody>/Review: /g; s/<\/reviewbody>//g; s/<stars>/Stars: /g; s/<\/stars>//g; s/<reviewdate>/Review date: /g; s/<\/reviewdate>//g; s/<createdate>/Creation date: /g; s/<\/createdate>//g; s/<reviewer_itemname>/User ID: /g; s/<\/reviewer_itemname>//g; s/<info>/info/g; s/<num_reviews>/Number of Reviews: /g; s/<\/num_reviews>//g; s/<avg_rating>/Avg Number of Reviews: /g; s/<\/avg_rating>//g; s/<\/info>//g; s/<\/reviews>//g' > archivervs-temp.txt && more archivervs-temp.txt && rm archivervs-temp.txt && echo
+  printf '\nLoading Reviews' 1>&2 && curl -s $(curl -vs $(archive_fun) 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r') 2> /dev/null | sed 's/<?xml version="1.0" encoding="UTF-8"?>//; /<reviews itemIdentifier=/d; /<review>/d; s/<\/review>//g; s/<reviewtitle>/Title: /g; s/<\/reviewtitle>//g; s/<reviewer>/User: /g; s/<\/reviewer>//g; s/<reviewbody>/Review: /g; s/<\/reviewbody>//g; s/<stars>/Stars: /g; s/<\/stars>//g; s/<reviewdate>/Review date: /g; s/<\/reviewdate>//g; s/<createdate>/Creation date: /g; s/<\/createdate>//g; s/<reviewer_itemname>/User ID: /g; s/<\/reviewer_itemname>//g; s/<info>/info/g; s/<num_reviews>/Number of Reviews: /g; s/<\/num_reviews>//g; s/<avg_rating>/Avg Number of Reviews: /g; s/<\/avg_rating>//g; s/<\/info>//g; s/<\/reviews>//g' > archivervs-temp.txt && more archivervs-temp.txt && rm archivervs-temp.txt && printf '\n'
 }
 archive_ls() {
-  curl -s https://archive.org/download/$(echo "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(echo "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d; /title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d' | awk -F '"' '{print $1}' | sed "s/ //g; s/https:\/\/archive.org\/download\///g; s#$(echo "$wombo" | x_fun)##; s/%20/ /g; s/%3C/</g; s/%3E/>/g; s/%40/@/g; s/%23/#/g; s/%28/(/g; s/%29/)/g; s/%3D/=/g; s/%2B/+/g; s/%27/'/g; s/%2C/,/g; s/%5E/\^/g; s/%26/\&/g; s/%5B/\[/g; s/%5D/\]/g; s/%7B/{/g; s/%7D/}/g; s/%7C/|/g; s/%3B/;/g; s/%3A/:/g; s/%3F/?/g; s/%60/\`/g; s/%21/!/g; s/%E2%80%98/‘/g; s/%E2%80%99/’/g; s/%E2%80%9C/“/g; s/%E2%80%9D/”/g; s/%E2%80%9A/‚/g; s/%E2%80%9E/„/g; s/%25/％/g" | sed 's/%22/"/g'
+  curl -s https://archive.org/download/$(printf "$wombo" | x_fun)/ | grep "href=" | grep "$combo" | awk -v w="https://archive.org/download/$(printf "$wombo" | x_fun)/" '{gsub(/<td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d; /title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d' | awk -F '"' '{print $1}' | sed "s/ //g; s/https:\/\/archive.org\/download\///g; s#$(printf "$wombo" | x_fun)##; s/%20/ /g; s/%3C/</g; s/%3E/>/g; s/%40/@/g; s/%23/#/g; s/%28/(/g; s/%29/)/g; s/%3D/=/g; s/%2B/+/g; s/%27/'/g; s/%2C/,/g; s/%5E/\^/g; s/%26/\&/g; s/%5B/\[/g; s/%5D/\]/g; s/%7B/{/g; s/%7D/}/g; s/%7C/|/g; s/%3B/;/g; s/%3A/:/g; s/%3F/?/g; s/%60/\`/g; s/%21/!/g; s/%E2%80%98/‘/g; s/%E2%80%99/’/g; s/%E2%80%9C/“/g; s/%E2%80%9D/”/g; s/%E2%80%9A/‚/g; s/%E2%80%9E/„/g; s/%25/％/g" | sed 's/%22/"/g'
 }
 darchive_raw() {
-  echo 1>&2 && echo "This May Take A Minute..." 1>&2 && curl -vs $(archive_raw | sed '/title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d') 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r'
+  printf "\nThis May Take A Minute...\n" 1>&2 && curl -vs $(archive_raw | sed '/title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d') 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r'
 }
 aria2darchive_fun() {
   darchive_raw | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -i darchiveurl.txt
-  cat darchiveurl.txt | grep '.zip' > /dev/null
+  grep '.zip' darchiveurl.txt > /dev/null
   if [ $? = 0 ]; then
     comdo='.zip'
   fi
@@ -69,7 +70,7 @@ aria2darchive_fun() {
 do_you_boo
 }
 archive_cpd() {
-$dombo https://archive.org/compress/$(echo "$wombo" | sed 's#https://archive.org/details/##; s#https://archive.org/download/##; s#https://archive.org/compress/##')
+$dombo https://archive.org/compress/$(printf "$wombo" | sed 's#https://archive.org/details/##; s#https://archive.org/download/##; s#https://archive.org/compress/##')
 }
 x_fun() {
 	sed "s/％/%25/g; s/ /%20/g; s/</%3C/g; s/>/%3E/g; s/@/%40/g; s/#/%23/g; s/(/%28/g; s/)/%29/g; s/=/%3D/g; s/+/%2B/g; s/'/%27/g; s/,/%2C/g; s/\^/%5E/g; s/\&/%26/g; s/\[/%5B/g; s/\]/%5D/g; s/{/%7B/g; s/}/%7D/g; s/|/%7C/g; s/;/%3B/g; s/:/%3A/g; s/?/%3F/g; s/\`/%60/g; s/!/%21/g; s/‘/%E2%80%98/g; s/’/%E2%80%99/g; s/“/%E2%80%9C/g; s/”/%E2%80%9D/g; s/‚/%E2%80%9A/g; s/„/%E2%80%9E/g" | sed 's/"/%22/g'
@@ -78,18 +79,17 @@ x_fun2() {
 	sed "s#/#https://archive.org/download/$x/#"
 }
 do_you_boo() {
-  if echo "$comdo" | grep '.zip' > /dev/null; then
+  if printf "%s" "$comdo" | grep '.zip' > /dev/null; then
   clear
-  echo "Do you want to extract and remove zip(s)? (y/n) *This will 'EXTRACT' and or 'DELETE' other zip files that may be in the directory*"
-  echo
+  printf "Do you want to extract and remove zip(s)? (y/n) *This will 'EXTRACT' and or 'DELETE' other zip files that may be in the directory*\n\n"
   read -r gombo
   case "$gombo" in
     y|Y) unzip '*.zip' && rm *.zip;;
-    n|N) echo "Ok then.";;
-      *) echo "Umm.. ok I'll just pick no...";;
+    n|N) printf "Ok then.\n";;
+      *) printf "Umm.. ok I'll just pick no...\n";;
   esac
   clear
-  echo "Done! :-p"
+  printf "Done! :-p\n"
 fi
 }
 
@@ -101,7 +101,7 @@ case "$sombo" in
   r) r='--layout=reverse';;
   c) combo="$OPTARG";;
   l) l='--layout=reverse-list';;
-  s) echo "$syntax"; echo; exit;;
+  s) printf "$syntax\n"; echo; exit;;
   S) clear; read -p 'Search: ' -r search_var; clear; read -p 'Page: ' -r search_page_var; clear; read -p 'Rows: ' -r search_rows_var; clear; wombo="$(search)";;
   a) archive_fun; exit;;
   D) darchive_fun; exit;;
@@ -111,37 +111,35 @@ case "$sombo" in
   v) dombo="echo"; combo="_reviews.xml"; archive_rvs; exit;;
   L) archive_ls; exit;;
   i) aria2darchive_fun; exit;;
-  *) echo; echo "Umm... Yeah... I think thats... Not.. Right. :^/"
-    echo
-    echo $please; echo; exit;;
+  *) printf "\nUmm... Yeah... I think thats... Not.. Right. :^/\n$please\n"; exit;;
 esac
 done
 
-x="$(echo "$wombo" | x_fun)"
+x="$(printf "$wombo" | x_fun)"
 
 bombo_fun() {
   archive_ls | fzf $r$l
 }
 
 bombo="$(bombo_fun)"
-comdo="$(echo $bombo | x_fun | x_fun2)"
+comdo="$(printf "$bombo" | x_fun | x_fun2)"
 
 
-if [ $(echo "$bombo" | tr -dc '/' | wc -c) = 1 ]; then
+if [ $(printf "$bombo" | tr -dc '/' | wc -c) = 1 ]; then
   $dombo $comdo
 else
-	echo "This is a Directory!" 1>&2
+	printf "\nThis is a Directory!\n" 1>&2
 	temp="archiveid-temp.txt"
-	echo "$bombo" > $temp
+	printf "$bombo" > $temp
 	wombo="$wombo$bombo"
 	wombo2="$wombo"
-	while [ $(cat $temp | xargs -d'\n' | sed 's/\/ /\//g' | awk -F "" '{print $NF}') = / ]; do
-	echo "$(bombo_fun)" >> $temp
-	wombo="$wombo2$(cat $temp | xargs -d'\n' | sed "s/\/ \//\//g; s#$bombo##")"
-	echo; echo "RECUR OUT: $wombo"; echo
+	while [ $(xargs -d'\n' < $temp | sed 's/\/ /\//g' | awk -F "" '{print $NF}') = / ]; do
+	printf "$(bombo_fun)" >> $temp
+	wombo="$wombo2$(xargs -d'\n' < $temp | sed "s/\/ \//\//g; s#$bombo##")"
+	printf "\nRECUR OUT: $wombo\n\n"
 done
 
-rm $temp; $dombo $(echo "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
+rm $temp; $dombo $(printf "$wombo" | sed "s/\/ \//\//g; s/$x//" | x_fun | x_fun2)
 comdo=$wombo
 fi
 
