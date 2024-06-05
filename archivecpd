@@ -1,6 +1,0 @@
-#!/bin/sh
-
-wombo=$1
-combo=$2
-
-$wombo https://archive.org/compress/$(echo "$combo" | sed 's#https://archive.org/details/##; s#https://archive.org/download/##; s#https://archive.org/compress/##')
