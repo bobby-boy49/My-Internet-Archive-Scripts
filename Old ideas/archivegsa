@@ -1,0 +1,9 @@
+#!/bin/sh
+
+wombo=$1
+dombo=$2
+combo=$3
+sombo=$4
+jombo=$5
+
+curl -s 'https://archive.org/advancedsearch.php?q='$(echo "$wombo" | sed 's/ /+/')'&fl[]=identifier&rows='$combo'&page='$dombo'&output=xml' | grep 'identifier' | sed 's/<str name="identifier">//g; s/<\/str>//g; s/ //g' | fzf | xargs -I {} $sombo {} $jombo

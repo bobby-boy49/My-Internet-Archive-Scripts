@@ -1,0 +1,7 @@
+#!/bin/sh
+
+bombo=$1
+wombo=$2
+dombo=$3
+
+$bombo $(curl -s $(curl -vs $(archiveid echo "$wombo" zip) 2>&1 | grep "< location:"| sed 's/<//; s/location: //; s/\r//; s/.org\//.org\/view_archive.php?archive=\//' | awk '{print $1}') | grep "href=" | grep "$dombo" | awk -v w="https:" '{gsub(/<tr><td><a href="/,w); print}' | grep 'https://archive.org/download/' | sed '/\/details\//d; /title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d' | awk -F '"' '{print $1}')

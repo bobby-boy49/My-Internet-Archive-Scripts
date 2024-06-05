@@ -1,0 +1,6 @@
+#!/bin/sh
+
+wombo=$1
+dombo=$2
+
+curl -s $(curl -vs $(archivezid echo "$wombo" $dombo) 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r') && echo ''
