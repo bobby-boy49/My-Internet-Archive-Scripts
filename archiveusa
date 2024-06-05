@@ -1,7 +1,0 @@
-#!/bin/sh
-
-dombo=$1
-combo=$2
-bombo=$3
-
-curl -s https://archive.org/details/@$(echo "$dombo" | sed 's#https://archive.org/details/@##') | grep '<a href="/details/' | sed '/<a href="\/details\/@*.*&morf=/d; /<a href="\/details\/fav-/d; /<a href="\/details\/%40*.*?&sort=/d' | sed 's#<a href="/details/##g' | awk -F '"' '{print $1}' | sed 's/ //g' | fzf | xargs -I {} $combo {} $bombo
