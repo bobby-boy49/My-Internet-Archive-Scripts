@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-S|-a|-D|-R|-k|-C|-v|-L|-i]'
+syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-e|-S|-a|-D|-R|-k|-C|-v|-L|-i]'
 
 help() {
 printf "
@@ -16,6 +16,7 @@ $syntax
 -c: Filter the search results.
 -l: Reverse-list layout for fzf.
 -s: Only syntax.
+-e: Examples.
 
 ---- Must run in order! ----
 
@@ -28,6 +29,18 @@ $syntax
 -v: Grab reviews.
 -L: List output.
 -i: aria2 mode.
+\n"
+}
+
+exam() {
+printf "
+archiveid -c \.zip -d 'A tool' -S\nor\narchiveid -c \.zip -d 'A tool' -w 'A identifier'
+\n
+archiveid -S -v\nor\narchiveid -w 'A identifier' -v
+\n
+archiveid -l -c \.zip -d 'A tool' -S -a\nor\narchiveid -l -c \.zip -d 'A tool' -w 'A identifier' -D
+\n
+archiveid -S -i\nor\narchiveid -c \.zip -w 'A identifier' -i
 \n"
 }
 
@@ -93,7 +106,7 @@ do_you_boo() {
 fi
 }
 
-while getopts "hd:w:rc:lsSaDRkCvLi" sombo; do
+while getopts "hd:w:rc:lseSaDRkCvLi" sombo; do
 case "$sombo" in
   h) help; exit;;
   d) dombo="$OPTARG";;
@@ -102,6 +115,7 @@ case "$sombo" in
   c) combo="$OPTARG";;
   l) l='--layout=reverse-list';;
   s) printf "\n$syntax\n"; echo; exit;;
+  e) exam; exit;;
   S) clear; read -p 'Search: ' -r search_var; clear; read -p 'Page: ' -r search_page_var; clear; read -p 'Rows: ' -r search_rows_var; clear; wombo="$(search)";;
   a) archive_fun; exit;;
   D) darchive_fun; exit;;
