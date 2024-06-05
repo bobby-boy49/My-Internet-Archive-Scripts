@@ -1,6 +1,0 @@
-#!/bin/sh
-
-dombo=$1
-combo=$2
-
-darchiveraw "$dombo" $combo | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -i darchiveurl.txt && rm darchiveurl.txt
