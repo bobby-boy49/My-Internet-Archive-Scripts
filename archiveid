@@ -101,7 +101,7 @@ case "$sombo" in
   r) r='--layout=reverse';;
   c) combo="$OPTARG";;
   l) l='--layout=reverse-list';;
-  s) printf "$syntax\n"; echo; exit;;
+  s) printf "\n$syntax\n"; echo; exit;;
   S) clear; read -p 'Search: ' -r search_var; clear; read -p 'Page: ' -r search_page_var; clear; read -p 'Rows: ' -r search_rows_var; clear; wombo="$(search)";;
   a) archive_fun; exit;;
   D) darchive_fun; exit;;
