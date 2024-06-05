@@ -76,7 +76,7 @@ darchive_raw() {
   printf "\nThis May Take A Minute...\n" 1>&2 && curl -vsA "$agent" $(archive_raw | sed '/title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d') 2>&1 | grep '< location:' | awk '{print $3}' | tr -d '\r'
 }
 aria2darchive_fun() {
-  darchive_raw | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -i darchiveurl.txt
+  darchive_raw | sed '/_archive.torrent/d' > darchiveurl.txt && aria2c -U "$agent" -i darchiveurl.txt
   grep '.zip' darchiveurl.txt > /dev/null
   if [ $? = 0 ]; then
     comdo='.zip'
