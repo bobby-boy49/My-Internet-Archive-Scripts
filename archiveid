@@ -127,7 +127,7 @@ case "$sombo" in
   v) dombo="echo"; combo="_reviews.xml"; archive_rvs; exit;;
   L) archive_ls; exit;;
   i) aria2darchive_fun; exit;;
-  *) printf "\nUmm... Yeah... I think thats... Not.. Right. :^/\n$please\n"; exit;;
+  *) printf "\nUmm... Yeah... I think thats... Not.. Right. :^/\n\n$please\n\n"; exit;;
 esac
 done
 
