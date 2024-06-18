@@ -112,7 +112,7 @@ while getopts "hd:w:rc:lseSaDRkCvLi" sombo; do
 case "$sombo" in
   h) help; exit;;
   d) dombo="$OPTARG";;
-  w) wombo="$OPTARG";;
+  w) wombo="$OPTARG"; wombo=$(printf "$wombo" | sed 's/https:\/\/archive.org\/details\///; s/https:\/\/archive.org\/download\///');;
   r) r='--layout=reverse';;
   c) combo="$OPTARG";;
   l) l='--layout=reverse-list';;
