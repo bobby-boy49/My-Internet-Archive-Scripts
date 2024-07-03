@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-
+# S.W.I.A.C
 # A shitlly written Internet Archive CLI!
 
 syntax='syntax [-h|-d|-w|-r|-c|-l|-s|-e|-S|-a|-D|-R|-k|-C|-v|-L|-i]'
