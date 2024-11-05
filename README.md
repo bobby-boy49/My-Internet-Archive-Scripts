@@ -4,4 +4,4 @@ Uses curl, awk, grep, sed, printf, and echo like once for some reason. Might cha
 
 EDIT: Echo is used two times my bad.
 
-Also feel free to take this trash and make it better or write it in a actual languege.
+Also feel free to take this trash and make it better or write it in a actual languege. (That is if you will be able to read it, lol!)
