@@ -114,7 +114,7 @@ archive_ls() {
 darchive_raw() {
   printf "\nThis May Take A Minute...\n" 1>&2 && curl -vsA "$agent" $(archive_raw \
     | sed '/title="Parent Directory"/d; /_thumb.jpg/d; /.ia.mp4/d') 2>&1 \
-    | grep '< location:' \
+    | grep -i '< Location:' \
     | awk '{print $3}' \
     | tr -d '\r'
 }
